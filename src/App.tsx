@@ -9,7 +9,7 @@ export default function App() {
   const [role, setRole] = useState<Role>(() => (new URLSearchParams(location.search).get("role") === "manager" ? "manager" : "admin"));
   return (
     <div className="bg-background text-foreground min-h-dvh">
-      <nav className="border-border bg-surface flex items-center justify-between border-b px-10 py-3">
+      <nav className="border-border flex items-center justify-between border-b px-10 py-2">
         <span className="text-sm font-semibold">Welder · prototype</span>
         <div className="flex items-center gap-3">
           <span className="text-muted text-xs">Ingelogd als {role === "admin" ? "HR / admin" : TEAM_MANAGER_NAME}</span>

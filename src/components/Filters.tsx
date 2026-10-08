@@ -20,7 +20,7 @@ export function Filters({ value, onChange }: Props) {
   return (
     <div className="flex flex-wrap items-end gap-4">
       <DateRangePicker
-        className="w-[300px]"
+        className="w-[320px]"
         value={value.range}
         onChange={(range) => onChange({ ...value, range })}
       >
@@ -79,7 +79,7 @@ export function Filters({ value, onChange }: Props) {
 
       <Select
         className="w-[260px]"
-        placeholder="Laatste beoordeling per medewerker"
+        placeholder="Laatste beoordeling"
         selectedKey={value.cycle ?? "latest"}
         onSelectionChange={(k) => onChange({ ...value, cycle: k === "latest" || k === null ? null : String(k) })}
       >
@@ -90,7 +90,7 @@ export function Filters({ value, onChange }: Props) {
         </Select.Trigger>
         <Select.Popover>
           <ListBox>
-            <ListBox.Item id="latest" textValue="Laatste beoordeling">Laatste beoordeling per medewerker<ListBox.ItemIndicator /></ListBox.Item>
+            <ListBox.Item id="latest" textValue="Laatste beoordeling">Laatste beoordeling<ListBox.ItemIndicator /></ListBox.Item>
             {CYCLE_OPTIONS.map((c) => (
               <ListBox.Item key={c} id={c} textValue={c}>{c}<ListBox.ItemIndicator /></ListBox.Item>
             ))}

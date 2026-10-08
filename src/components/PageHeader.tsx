@@ -1,4 +1,3 @@
-import { ArrowDownToLine } from "@gravity-ui/icons";
 import { Button } from "@heroui/react";
 import { Segment } from "@heroui-pro/react";
 
@@ -26,7 +25,6 @@ export function PageHeader({ title, subtitle, view, onViewChange, onExport }: Pr
         </Segment>
         {onExport && (
           <Button variant="secondary" onPress={onExport}>
-            <ArrowDownToLine />
             Exporteren (xlsx)
           </Button>
         )}

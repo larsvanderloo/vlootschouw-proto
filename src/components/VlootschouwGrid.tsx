@@ -2,7 +2,7 @@ import { TrendChip } from "@heroui-pro/react";
 import { GridTile } from "./GridTile";
 import { MemberAvatars } from "./MemberAvatars";
 import {
-  BENCHMARK, BENCHMARK_LOW_POTENTIAL, CATEGORIES, X_LABELS, Y_LABELS, BAND_RANGES,
+  BENCHMARK, BENCHMARK_LOW_POTENTIAL, CATEGORIES, X_LABELS, Y_LABELS,
   fmtDelta, fmtPct, trendOf, type Category, type Shares,
 } from "../data/vlootschouw";
 
@@ -42,10 +42,9 @@ export function VlootschouwGrid({ shares, showBenchmark, compact, onOpen }: Prop
           </div>
         ))}
         <div className="max-md:hidden" />
-        {X_LABELS.map((l, i) => (
+        {X_LABELS.map((l) => (
           <div key={l} className="text-muted text-center text-sm font-medium max-md:hidden">
             {l}
-            <span className="block text-xs opacity-70">{BAND_RANGES[i]}</span>
           </div>
         ))}
       </div>
@@ -53,7 +52,7 @@ export function VlootschouwGrid({ shares, showBenchmark, compact, onOpen }: Prop
       <button
         type="button"
         onClick={() => onOpen("low")}
-        className="bg-surface-secondary border-border hover:ring-accent/40 focus-visible:ring-accent flex w-full items-center gap-4 rounded-2xl border px-4 py-3 text-left transition-colors hover:ring-2 focus-visible:outline-none focus-visible:ring-2"
+        className="bg-surface-secondary border-border hover:ring-accent/40 focus-visible:ring-accent flex w-full items-center gap-4 rounded-xl border px-4 py-3 text-left transition-colors hover:ring-2 focus-visible:outline-none focus-visible:ring-2"
       >
         <div className="flex min-w-0 flex-1 flex-col">
           <span className="text-foreground text-sm font-medium">Plaatsing heroverwegen</span>

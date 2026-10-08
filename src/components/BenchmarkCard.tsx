@@ -60,7 +60,7 @@ export function BenchmarkCard({ shares, showBenchmark, onToggle, title = BENCHMA
         </Switch.Content>
       </Switch>
       <p className="text-xs opacity-80">
-        Groen = hoger aandeel dan de benchmark, rood = lager. Bijgewerkt {BENCHMARK_META.updated}.
+        Ten opzichte van de benchmark: groen = hoger aandeel dan de benchmark, rood = lager.
       </p>
     </aside>
   );

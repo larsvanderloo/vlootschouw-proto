@@ -27,20 +27,15 @@ export function GridTile({ category, members, pct, benchmark, showBenchmark, com
       onClick={() => onOpen(category)}
       aria-label={`${category.label}: ${members.length} medewerkers, open lijst`}
       className={[
-        "flex min-h-32 w-full flex-col items-start gap-3 rounded-2xl border p-4 text-left transition-colors",
+        "flex w-full flex-col items-start gap-3 rounded-xl border p-4 text-left transition-colors",
         "hover:ring-2 hover:ring-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
         empty ? "bg-surface-secondary border-border opacity-70" : TINT[category.tint],
         compact ? "p-3 gap-2" : "",
       ].join(" ")}
     >
-      <div className="flex w-full flex-col">
-        <span className="text-foreground text-sm font-medium">{category.label}</span>
-        <span className="text-muted text-xs">
-          {empty ? "niemand" : `${members.length} ${members.length === 1 ? "medewerker" : "medewerkers"}`}
-        </span>
-      </div>
+      <span className="text-foreground text-base font-medium leading-6">{category.label}</span>
       <div className="flex items-center gap-2">
-        <span className={`text-foreground font-semibold ${compact ? "text-xl" : "text-2xl"}`}>{fmtPct(pct)}</span>
+        <span className={`text-foreground font-semibold tabular-nums ${empty ? "text-muted" : ""} ${compact ? "text-xl" : "text-2xl"}`}>{fmtPct(pct)}</span>
         {showBenchmark && (
           <Tooltip delay={200}>
             <Tooltip.Trigger>
@@ -57,7 +52,7 @@ export function GridTile({ category, members, pct, benchmark, showBenchmark, com
           </Tooltip>
         )}
       </div>
-      <MemberAvatars members={members} size={compact ? "sm" : "md"} />
+      <MemberAvatars members={members} size="sm" />
     </button>
   );
 }
