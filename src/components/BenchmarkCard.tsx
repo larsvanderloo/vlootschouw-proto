@@ -16,6 +16,30 @@ const GROUPS = [
   { label: "Onderpresteerders", short: "Onderpresteerders", keys: ["onderpresteerder"] as const },
 ];
 
+/** Links uitgelijnde, zelf afgebroken as-labels (recharts lijnt standaard rechts uit). */
+function wrapWords(text: string, max = 18): string[] {
+  const lines: string[] = [];
+  let cur = "";
+  for (const w of text.split(" ")) {
+    if ((cur + " " + w).trim().length > max && cur) { lines.push(cur); cur = w; }
+    else cur = cur ? cur + " " + w : w;
+  }
+  if (cur) lines.push(cur);
+  return lines;
+}
+function LeftTick({ y = 0, payload }: { y?: number; payload?: { value: string } }) {
+  const lines = wrapWords(String(payload?.value ?? ""));
+  const lh = 13;
+  const first = y - ((lines.length - 1) * lh) / 2 + 4;
+  return (
+    <text x={0} textAnchor="start" fontSize={11} fill="var(--muted)">
+      {lines.map((l, i) => (
+        <tspan key={i} x={0} y={first + i * lh}>{l}</tspan>
+      ))}
+    </text>
+  );
+}
+
 const SERIES = [
   { key: "wij", name: "Wij", color: "var(--chart-3)" },
   { key: "benchmark", name: "Benchmark", color: "var(--chart-5)" },
@@ -56,7 +80,7 @@ export function BenchmarkCard({ shares, showBenchmark, onToggle, title = BENCHMA
         </div>
         <BarChart data={data} height={4 * 54} layout="vertical" margin={{ top: 0, right: 36, bottom: 0, left: 0 }}>
           <BarChart.XAxis hide type="number" domain={[0, Math.ceil(max / 10) * 10]} />
-          <BarChart.YAxis dataKey="group" type="category" width={112} tickMargin={4} interval={0} tick={{ fontSize: 11 }} />
+          <BarChart.YAxis dataKey="group" type="category" width={118} interval={0} tick={<LeftTick />} />
           <BarChart.Bar
             dataKey="wij"
             name="Wij"
