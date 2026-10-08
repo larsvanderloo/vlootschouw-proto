@@ -96,7 +96,7 @@ export function VlootschouwGrid({ shares, showBenchmark, compact, onOpen }: Prop
         {showBenchmark && (
           <TrendChip size="sm" trend={trendOf(lowPct, BENCHMARK_LOW_POTENTIAL)}>
             {fmtDelta(lowPct, BENCHMARK_LOW_POTENTIAL)}
-            <TrendChip.Suffix className="max-md:hidden">bm {fmtPct(BENCHMARK_LOW_POTENTIAL, 1)}</TrendChip.Suffix>
+            <TrendChip.Suffix className="text-current! opacity-75 max-md:hidden">bm {fmtPct(BENCHMARK_LOW_POTENTIAL, 1)}</TrendChip.Suffix>
           </TrendChip>
         )}
         <span className="max-md:hidden"><MemberAvatars members={shares.lowPotential} size="sm" /></span>

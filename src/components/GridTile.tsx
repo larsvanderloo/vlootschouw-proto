@@ -39,7 +39,9 @@ export function GridTile({ category, members, pct, benchmark, showBenchmark, com
         <span className="text-foreground line-clamp-2 text-xs font-medium leading-4 break-words hyphens-auto" lang="nl">{category.label}</span>
         <span className={`text-xl font-semibold leading-6 tabular-nums ${empty ? "text-muted" : "text-foreground"}`}>{fmtPct(pct)}</span>
         {showBenchmark ? (
-          <TrendChip size="sm" trend={trendOf(pct, benchmark)}>{fmtDelta(pct, benchmark)}</TrendChip>
+          <span className="bg-surface inline-flex rounded-full">
+            <TrendChip size="sm" trend={trendOf(pct, benchmark)}>{fmtDelta(pct, benchmark)}</TrendChip>
+          </span>
         ) : (
           <span className="h-6" />
         )}
@@ -67,10 +69,10 @@ export function GridTile({ category, members, pct, benchmark, showBenchmark, com
         {showBenchmark && (
           <Tooltip delay={200}>
             <Tooltip.Trigger>
-              <span>
+              <span className="bg-surface inline-flex rounded-full">
                 <TrendChip size="sm" trend={trendOf(pct, benchmark)}>
                   {fmtDelta(pct, benchmark)}
-                  <TrendChip.Suffix>bm {fmtPct(benchmark, 1)}</TrendChip.Suffix>
+                  <TrendChip.Suffix className="text-current! opacity-75">bm {fmtPct(benchmark, 1)}</TrendChip.Suffix>
                 </TrendChip>
               </span>
             </Tooltip.Trigger>

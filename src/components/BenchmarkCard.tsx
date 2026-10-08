@@ -46,7 +46,7 @@ export function BenchmarkCard({ shares, showBenchmark, onToggle, title = BENCHMA
               <span className="text-base font-semibold">{fmtPct(r.own)}</span>
               <TrendChip size="sm" trend={trendOf(r.own, r.bm)}>
                 {fmtDelta(r.own, r.bm)}
-                <TrendChip.Suffix>vs bm</TrendChip.Suffix>
+                <TrendChip.Suffix className="text-current! opacity-75">vs bm</TrendChip.Suffix>
               </TrendChip>
             </div>
           </div>
