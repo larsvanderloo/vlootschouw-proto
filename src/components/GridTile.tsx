@@ -1,3 +1,4 @@
+import { Persons } from "@gravity-ui/icons";
 import { Tooltip } from "@heroui/react";
 import { TrendChip } from "@heroui-pro/react";
 import { MemberAvatars } from "./MemberAvatars";
@@ -10,6 +11,8 @@ interface Props {
   benchmark: number;
   showBenchmark: boolean;
   compact?: boolean;
+  /** Mobiele 3x3: kleine tegel zonder avatars, alleen naam, %, delta en aantal. */
+  dense?: boolean;
   onOpen: (category: Category) => void;
 }
 
@@ -19,8 +22,33 @@ const TINT: Record<Category["tint"], string> = {
   danger: "bg-danger-soft border-danger/40",
 };
 
-export function GridTile({ category, members, pct, benchmark, showBenchmark, compact, onOpen }: Props) {
+export function GridTile({ category, members, pct, benchmark, showBenchmark, compact, dense, onOpen }: Props) {
   const empty = members.length === 0;
+  if (dense) {
+    return (
+      <button
+        type="button"
+        onClick={() => onOpen(category)}
+        aria-label={`${category.label}: ${members.length} medewerkers, open lijst`}
+        className={[
+          "flex min-h-[7.5rem] w-full flex-col items-start justify-between gap-1.5 rounded-xl border p-2.5 text-left",
+          "focus-visible:ring-accent focus-visible:outline-none focus-visible:ring-2",
+          empty ? "bg-surface-secondary border-border opacity-70" : TINT[category.tint],
+        ].join(" ")}
+      >
+        <span className="text-foreground line-clamp-2 text-xs font-medium leading-4 break-words hyphens-auto" lang="nl">{category.label}</span>
+        <span className={`text-xl font-semibold leading-6 tabular-nums ${empty ? "text-muted" : "text-foreground"}`}>{fmtPct(pct)}</span>
+        {showBenchmark ? (
+          <TrendChip size="sm" trend={trendOf(pct, benchmark)}>{fmtDelta(pct, benchmark)}</TrendChip>
+        ) : (
+          <span className="h-6" />
+        )}
+        <span className="text-muted flex items-center gap-1 text-xs">
+          <Persons className="size-3.5" /> {members.length}
+        </span>
+      </button>
+    );
+  }
   return (
     <button
       type="button"

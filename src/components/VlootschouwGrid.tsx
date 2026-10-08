@@ -20,10 +20,42 @@ export function VlootschouwGrid({ shares, showBenchmark, compact, onOpen }: Prop
     : 0;
   return (
     <div className="flex flex-col gap-4">
-      <div className="grid grid-cols-[6rem_repeat(3,minmax(0,1fr))] gap-x-4 gap-y-4 max-md:grid-cols-1">
+      {/* mobiel: compacte 3x3 met assen */}
+      <div className="flex flex-col gap-3 md:hidden">
+        <div className="grid grid-cols-3 gap-2">
+          {X_LABELS.map((l) => (
+            <div key={l} className="text-muted text-center text-[11px] font-medium leading-4">{l}</div>
+          ))}
+        </div>
+        {rows.map((y, i) => (
+          <div key={y} className="flex flex-col gap-1.5">
+            <div className="text-muted text-xs font-medium">{Y_LABELS[i]}</div>
+            <div className="grid grid-cols-3 gap-2">
+              {[0, 1, 2].map((x) => {
+                const cat = CATEGORIES.find((c) => c.x === x && c.y === y)!;
+                return (
+                  <GridTile
+                    key={cat.key}
+                    dense
+                    category={cat}
+                    members={shares.byCategory[cat.key]}
+                    pct={shares.pct[cat.key]}
+                    benchmark={BENCHMARK[cat.key]}
+                    showBenchmark={showBenchmark}
+                    onOpen={onOpen}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* desktop: 3x3 met aslabels */}
+      <div className="grid grid-cols-[6rem_repeat(3,minmax(0,1fr))] gap-x-4 gap-y-4 max-md:hidden">
         {rows.map((y, i) => (
           <div key={y} className="contents">
-            <div className="text-muted flex items-center text-sm font-medium max-md:hidden">{Y_LABELS[i]}</div>
+            <div className="text-muted flex items-center text-sm font-medium">{Y_LABELS[i]}</div>
             {[0, 1, 2].map((x) => {
               const cat = CATEGORIES.find((c) => c.x === x && c.y === y)!;
               return (
@@ -41,9 +73,9 @@ export function VlootschouwGrid({ shares, showBenchmark, compact, onOpen }: Prop
             })}
           </div>
         ))}
-        <div className="max-md:hidden" />
+        <div />
         {X_LABELS.map((l) => (
-          <div key={l} className="text-muted text-center text-sm font-medium max-md:hidden">
+          <div key={l} className="text-muted text-center text-sm font-medium">
             {l}
           </div>
         ))}
@@ -64,10 +96,10 @@ export function VlootschouwGrid({ shares, showBenchmark, compact, onOpen }: Prop
         {showBenchmark && (
           <TrendChip size="sm" trend={trendOf(lowPct, BENCHMARK_LOW_POTENTIAL)}>
             {fmtDelta(lowPct, BENCHMARK_LOW_POTENTIAL)}
-            <TrendChip.Suffix>bm {fmtPct(BENCHMARK_LOW_POTENTIAL, 1)}</TrendChip.Suffix>
+            <TrendChip.Suffix className="max-md:hidden">bm {fmtPct(BENCHMARK_LOW_POTENTIAL, 1)}</TrendChip.Suffix>
           </TrendChip>
         )}
-        <MemberAvatars members={shares.lowPotential} size="sm" />
+        <span className="max-md:hidden"><MemberAvatars members={shares.lowPotential} size="sm" /></span>
       </button>
     </div>
   );
