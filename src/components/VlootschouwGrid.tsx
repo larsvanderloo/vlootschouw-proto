@@ -29,9 +29,7 @@ export function VlootschouwGrid({ shares, showBenchmark, compact, onOpen }: Prop
         </div>
         {rows.map((y, i) => (
           <div key={y} className="flex flex-col gap-1.5">
-            <div className="text-muted text-xs font-medium">
-              {Y_ROWS[i].label} <span className="opacity-60">· potentieel {Y_ROWS[i].level}</span>
-            </div>
+            <div className="text-muted text-xs font-medium">{Y_ROWS[i].label}</div>
             <div className="grid grid-cols-3 gap-2">
               {[0, 1, 2].map((x) => {
                 const cat = CATEGORIES.find((c) => c.x === x && c.y === y)!;
@@ -54,13 +52,10 @@ export function VlootschouwGrid({ shares, showBenchmark, compact, onOpen }: Prop
       </div>
 
       {/* desktop: 3x3 met aslabels */}
-      <div className="grid grid-cols-[6rem_repeat(3,minmax(0,1fr))] gap-x-4 gap-y-4 max-md:hidden">
+      <div className="grid grid-cols-[8rem_repeat(3,minmax(0,1fr))] gap-x-4 gap-y-4 max-md:hidden">
         {rows.map((y, i) => (
           <div key={y} className="contents">
-            <div className="text-muted flex flex-col justify-center text-sm font-medium leading-tight">
-              <span>{Y_ROWS[i].label}</span>
-              <span className="text-xs font-normal opacity-70">potentieel {Y_ROWS[i].level}</span>
-            </div>
+            <div className="text-muted flex items-center text-sm font-medium">{Y_ROWS[i].label}</div>
             {[0, 1, 2].map((x) => {
               const cat = CATEGORIES.find((c) => c.x === x && c.y === y)!;
               return (

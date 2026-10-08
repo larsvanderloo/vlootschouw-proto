@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Avatar, Chip, Pagination } from "@heroui/react";
 import { DataGrid, type DataGridColumn } from "@heroui-pro/react";
-import { CATEGORY_BY_KEY, categorize, fmtDate, fmtScore, initials, type Employee } from "../data/vlootschouw";
+import { CATEGORY_BY_KEY, POTENTIAL_LABELS, categorize, fmtDate, fmtScore, initials, type Employee } from "../data/vlootschouw";
 
 interface Props {
   rows: Employee[];
@@ -52,8 +52,9 @@ export function VlootschouwTable({ rows, onRowAction, pageSize = 15 }: Props) {
           <div className="flex min-w-0 flex-col gap-0.5">
             <span className="font-medium">{r.name}</span>
             <span className="text-muted text-xs">{r.position}</span>
-            <span className="md:hidden">
+            <span className="flex flex-wrap gap-1 md:hidden">
               <Chip size="sm" variant="soft" color={CHIP_COLOR[r.tint]} className="whitespace-nowrap">{r.categoryLabel}</Chip>
+              <Chip size="sm" variant="soft" color="accent" className="whitespace-nowrap">{POTENTIAL_LABELS[r.potential]}</Chip>
             </span>
           </div>
         </div>
@@ -63,7 +64,7 @@ export function VlootschouwTable({ rows, onRowAction, pageSize = 15 }: Props) {
     { id: "cycle", header: "Cyclus", accessorKey: "cycle", allowsSorting: true, width: 200, headerClassName: "max-md:hidden", cellClassName: "max-md:hidden" },
     { id: "date", header: "Datum", accessorKey: "date", allowsSorting: true, width: 140, cell: (r) => fmtDate(r.date), headerClassName: "max-md:hidden", cellClassName: "max-md:hidden" },
     { id: "performance", header: <><span className="md:hidden">Prest.</span><span className="max-md:hidden">Prestatie</span></>, accessorKey: "performance", allowsSorting: true, align: "end", width: 110, cell: (r) => fmtScore(r.performance) },
-    { id: "potential", header: <><span className="md:hidden">Pot.</span><span className="max-md:hidden">Potentieel</span></>, accessorKey: "potential", allowsSorting: true, align: "end", width: 110 },
+    { id: "potential", header: "Potentieel", accessorKey: "potential", allowsSorting: true, width: 170, sortFn: (a, b) => a.potential - b.potential, cell: (r) => <span className="whitespace-nowrap">{POTENTIAL_LABELS[r.potential]}</span>, headerClassName: "max-md:hidden", cellClassName: "max-md:hidden" },
     {
       id: "categoryLabel", header: "Vak", accessorKey: "categoryLabel", allowsSorting: true, width: 220, headerClassName: "max-md:hidden", cellClassName: "max-md:hidden",
       cell: (r) => <Chip size="sm" variant="soft" color={CHIP_COLOR[r.tint]} className="whitespace-nowrap">{r.categoryLabel}</Chip>,
