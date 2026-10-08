@@ -99,16 +99,18 @@ export function BenchmarkCard({ shares, showBenchmark, onToggle, title = BENCHMA
           />
           <BarChart.Tooltip content={<BarChart.TooltipContent valueFormatter={(v) => fmtPct(Number(v), 1)} />} />
         </BarChart>
+        <div className="border-border border-t pt-3">
+          <Switch isSelected={showBenchmark} onChange={onToggle}>
+            <Switch.Content className="text-foreground text-sm">
+              <Switch.Control>
+                <Switch.Thumb />
+              </Switch.Control>
+              Benchmark tonen in het grid
+            </Switch.Content>
+          </Switch>
+        </div>
       </div>
 
-      <Switch isSelected={showBenchmark} onChange={onToggle}>
-        <Switch.Content className="text-accent-foreground text-sm">
-          <Switch.Control>
-            <Switch.Thumb />
-          </Switch.Control>
-          Benchmark tonen in het grid
-        </Switch.Content>
-      </Switch>
       <p className="text-xs opacity-80">
         Blauw is ons aandeel, lichtblauw de benchmark. Bijgewerkt {BENCHMARK_META.updated}.
       </p>

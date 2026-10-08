@@ -6,10 +6,13 @@ interface Props {
   members: Employee[];
   max?: number;
   size?: "sm" | "md";
+  /** Kleiner dan de kleinste kit-maat (28px), voor de grid-tegels. */
+  compact?: boolean;
 }
 
 /** Avatar-rij met HoverCard per medewerker (naam, functie, beoordeling). */
-export function MemberAvatars({ members, max = 6, size = "md" }: Props) {
+export function MemberAvatars({ members, max = 6, size = "md", compact = false }: Props) {
+  const cls = compact ? "size-7 text-[10px]" : "";
   if (members.length === 0) return null;
   const visible = members.slice(0, max);
   const rest = members.length - visible.length;
@@ -18,7 +21,7 @@ export function MemberAvatars({ members, max = 6, size = "md" }: Props) {
       {visible.map((m) => (
         <HoverCard key={m.id} openDelay={150} closeDelay={100}>
           <HoverCard.Trigger>
-            <Avatar size={size} className="cursor-default ring-2 ring-surface">
+            <Avatar size={size} className={`cursor-default ring-2 ring-surface ${cls}`}>
               <Avatar.Image alt={m.name} src={m.avatar} />
               <Avatar.Fallback>{initials(m.name)}</Avatar.Fallback>
             </Avatar>
@@ -43,7 +46,7 @@ export function MemberAvatars({ members, max = 6, size = "md" }: Props) {
           </HoverCard.Content>
         </HoverCard>
       ))}
-      {rest > 0 && <AvatarGroup.Count size={size}>+{rest}</AvatarGroup.Count>}
+      {rest > 0 && <AvatarGroup.Count size={size} className={cls}>+{rest}</AvatarGroup.Count>}
     </AvatarGroup>
   );
 }

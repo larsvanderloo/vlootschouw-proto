@@ -16,11 +16,34 @@ interface Props {
   onOpen: (category: Category) => void;
 }
 
-const TINT: Record<Category["tint"], string> = {
-  none: "bg-surface border-border",
-  success: "bg-success-soft border-success/40",
-  danger: "bg-danger-soft border-danger/40",
+const DOT: Record<Category["tint"], string> = {
+  none: "bg-default",
+  success: "bg-success",
+  danger: "bg-danger",
 };
+
+function TileTitle({ category, count, dense }: { category: Category; count: number; dense?: boolean }) {
+  if (dense) {
+    return (
+      <span className="flex flex-col gap-0.5 text-xs leading-4">
+        <span className="flex items-start gap-1.5">
+          <span className={`mt-1 size-2 shrink-0 rounded-full ${DOT[category.tint]}`} aria-hidden="true" />
+          <span className="text-foreground line-clamp-2 font-medium break-words hyphens-auto" lang="nl">{category.label}</span>
+        </span>
+        <span className="text-muted flex items-center gap-1 pl-3.5 tabular-nums" aria-label={`${count} medewerkers`}>
+          <Persons className="size-3" /> {count}
+        </span>
+      </span>
+    );
+  }
+  return (
+    <span className="flex items-center gap-2 text-base leading-6">
+      <span className={`size-2 shrink-0 rounded-full ${DOT[category.tint]}`} aria-hidden="true" />
+      <span className="text-foreground font-medium">{category.label}</span>
+      <span className="text-muted tabular-nums">{count}</span>
+    </span>
+  );
+}
 
 export function GridTile({ category, members, pct, benchmark, showBenchmark, compact, dense, onOpen }: Props) {
   const empty = members.length === 0;
@@ -31,23 +54,16 @@ export function GridTile({ category, members, pct, benchmark, showBenchmark, com
         onClick={() => onOpen(category)}
         aria-label={`${category.label}: ${members.length} medewerkers, open lijst`}
         className={[
-          "flex min-h-[7.5rem] w-full flex-col items-start justify-between gap-1.5 rounded-xl border p-2.5 text-left",
+          "bg-surface border-border flex min-h-[7.5rem] w-full flex-col items-start gap-2 rounded-xl border p-2.5 text-left",
           "focus-visible:ring-accent focus-visible:outline-none focus-visible:ring-2",
-          empty ? "bg-surface-secondary border-border opacity-70" : TINT[category.tint],
+          empty ? "opacity-60" : "",
         ].join(" ")}
       >
-        <span className="text-foreground line-clamp-2 text-xs font-medium leading-4 break-words hyphens-auto" lang="nl">{category.label}</span>
+        <TileTitle category={category} count={members.length} dense />
         <span className={`text-xl font-semibold leading-6 tabular-nums ${empty ? "text-muted" : "text-foreground"}`}>{fmtPct(pct)}</span>
-        {showBenchmark ? (
-          <span className="bg-surface inline-flex rounded-full">
-            <TrendChip size="sm" trend={trendOf(pct, benchmark)}>{fmtDelta(pct, benchmark)}</TrendChip>
-          </span>
-        ) : (
-          <span className="h-6" />
+        {showBenchmark && (
+          <TrendChip size="sm" trend={trendOf(pct, benchmark)}>{fmtDelta(pct, benchmark)}</TrendChip>
         )}
-        <span className="text-muted flex items-center gap-1 text-xs">
-          <Persons className="size-3.5" /> {members.length}
-        </span>
       </button>
     );
   }
@@ -57,19 +73,19 @@ export function GridTile({ category, members, pct, benchmark, showBenchmark, com
       onClick={() => onOpen(category)}
       aria-label={`${category.label}: ${members.length} medewerkers, open lijst`}
       className={[
-        "flex w-full flex-col items-start gap-3 rounded-xl border p-4 text-left transition-colors",
+        "bg-surface border-border flex w-full flex-col items-start gap-4 rounded-xl border p-5 text-left transition-colors",
         "hover:ring-2 hover:ring-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
-        empty ? "bg-surface-secondary border-border opacity-70" : TINT[category.tint],
+        empty ? "opacity-60" : "",
         compact ? "p-3 gap-2" : "",
       ].join(" ")}
     >
-      <span className="text-foreground text-base font-medium leading-6">{category.label}</span>
+      <TileTitle category={category} count={members.length} />
       <div className="flex items-center gap-2">
         <span className={`text-foreground font-semibold tabular-nums ${empty ? "text-muted" : ""} ${compact ? "text-xl" : "text-2xl"}`}>{fmtPct(pct)}</span>
         {showBenchmark && (
           <Tooltip delay={200}>
             <Tooltip.Trigger>
-              <span className="bg-surface inline-flex rounded-full">
+              <span className="inline-flex">
                 <TrendChip size="sm" trend={trendOf(pct, benchmark)}>
                   {fmtDelta(pct, benchmark)}
                   <TrendChip.Suffix className="text-current! opacity-75">bm {fmtPct(benchmark, 1)}</TrendChip.Suffix>
@@ -82,7 +98,7 @@ export function GridTile({ category, members, pct, benchmark, showBenchmark, com
           </Tooltip>
         )}
       </div>
-      <MemberAvatars members={members} size="sm" />
+      <MemberAvatars members={members} size="sm" compact />
     </button>
   );
 }
