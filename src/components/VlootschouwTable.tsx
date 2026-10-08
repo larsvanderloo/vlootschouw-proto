@@ -49,21 +49,24 @@ export function VlootschouwTable({ rows, onRowAction, pageSize = 15 }: Props) {
             <Avatar.Image alt={r.name} src={r.avatar} />
             <Avatar.Fallback>{initials(r.name)}</Avatar.Fallback>
           </Avatar>
-          <div className="flex flex-col">
+          <div className="flex min-w-0 flex-col gap-0.5">
             <span className="font-medium">{r.name}</span>
             <span className="text-muted text-xs">{r.position}</span>
+            <span className="md:hidden">
+              <Chip size="sm" variant="soft" color={CHIP_COLOR[r.tint]} className="whitespace-nowrap">{r.categoryLabel}</Chip>
+            </span>
           </div>
         </div>
       ),
     },
-    { id: "department", header: "Afdeling", accessorKey: "department", allowsSorting: true },
-    { id: "cycle", header: "Cyclus", accessorKey: "cycle", allowsSorting: true },
-    { id: "date", header: "Datum", accessorKey: "date", allowsSorting: true, cell: (r) => fmtDate(r.date) },
-    { id: "performance", header: "Prestatie", accessorKey: "performance", allowsSorting: true, align: "end", cell: (r) => fmtScore(r.performance) },
-    { id: "potential", header: "Potentieel", accessorKey: "potential", allowsSorting: true, align: "end" },
+    { id: "department", header: "Afdeling", accessorKey: "department", allowsSorting: true, headerClassName: "max-md:hidden", cellClassName: "max-md:hidden" },
+    { id: "cycle", header: "Cyclus", accessorKey: "cycle", allowsSorting: true, headerClassName: "max-md:hidden", cellClassName: "max-md:hidden" },
+    { id: "date", header: "Datum", accessorKey: "date", allowsSorting: true, cell: (r) => fmtDate(r.date), headerClassName: "max-md:hidden", cellClassName: "max-md:hidden" },
+    { id: "performance", header: <><span className="md:hidden">Prest.</span><span className="max-md:hidden">Prestatie</span></>, accessorKey: "performance", allowsSorting: true, align: "end", cell: (r) => fmtScore(r.performance) },
+    { id: "potential", header: <><span className="md:hidden">Pot.</span><span className="max-md:hidden">Potentieel</span></>, accessorKey: "potential", allowsSorting: true, align: "end" },
     {
-      id: "categoryLabel", header: "Vak", accessorKey: "categoryLabel", allowsSorting: true,
-      cell: (r) => <Chip size="sm" variant="soft" color={CHIP_COLOR[r.tint]}>{r.categoryLabel}</Chip>,
+      id: "categoryLabel", header: "Vak", accessorKey: "categoryLabel", allowsSorting: true, headerClassName: "max-md:hidden", cellClassName: "max-md:hidden",
+      cell: (r) => <Chip size="sm" variant="soft" color={CHIP_COLOR[r.tint]} className="whitespace-nowrap">{r.categoryLabel}</Chip>,
     },
   ];
 
