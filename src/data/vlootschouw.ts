@@ -5,19 +5,19 @@ export type CategoryKey =
 
 export type Tint = "none" | "success" | "danger";
 
-export interface Category { key: CategoryKey; label: string; x: 0 | 1 | 2; y: 0 | 1 | 2; tint: Tint; lowerIsBetter?: boolean }
+export interface Category { key: CategoryKey; label: string; description: string; x: 0 | 1 | 2; y: 0 | 1 | 2; tint: Tint; lowerIsBetter?: boolean }
 
 /** x = prestatieband (0 laag, 1 middel, 2 hoog), y = potentieel - 2 (0..2) */
 export const CATEGORIES: Category[] = [
-  { key: "starter", label: "Starter", x: 0, y: 2, tint: "none" },
-  { key: "talent", label: "Talent", x: 1, y: 2, tint: "success" },
-  { key: "ster", label: "Ster", x: 2, y: 2, tint: "success" },
-  { key: "instabiele_presteerder", label: "Instabiele presteerder", x: 0, y: 1, tint: "none" },
-  { key: "professional", label: "Professional", x: 1, y: 1, tint: "none" },
-  { key: "topper", label: "Topper", x: 2, y: 1, tint: "success" },
-  { key: "onderpresteerder", label: "Onderpresteerder", x: 0, y: 0, tint: "danger", lowerIsBetter: true },
-  { key: "generieke_medewerker", label: "Generieke medewerker", x: 1, y: 0, tint: "none" },
-  { key: "specialist", label: "Specialist", x: 2, y: 0, tint: "none" },
+  { key: "starter", label: "Starter", description: "Hoog potentieel, nog lage prestatie. Vaak nieuw in de rol: investeer in begeleiding en geef tijd om te groeien.", x: 0, y: 2, tint: "none" },
+  { key: "talent", label: "Talent", description: "Hoog potentieel met een goede prestatie. Klaar voor meer verantwoordelijkheid of een volgende stap.", x: 1, y: 2, tint: "success" },
+  { key: "ster", label: "Ster", description: "Hoog potentieel én topprestatie. Koester deze medewerkers: uitdagende opdrachten en zicht op doorgroei.", x: 2, y: 2, tint: "success" },
+  { key: "instabiele_presteerder", label: "Instabiele presteerder", description: "Potentieel aanwezig, prestatie blijft achter. Zoek de oorzaak: rol, motivatie of omstandigheden.", x: 0, y: 1, tint: "none" },
+  { key: "professional", label: "Professional", description: "Solide prestatie met groeipotentieel. De ruggengraat van het team; houd ze betrokken en in ontwikkeling.", x: 1, y: 1, tint: "none" },
+  { key: "topper", label: "Topper", description: "Topprestatie met potentieel om verder te groeien. Geef verdieping of een bredere rol.", x: 2, y: 1, tint: "success" },
+  { key: "onderpresteerder", label: "Onderpresteerder", description: "Lage prestatie en weinig groeiruimte in deze rol. Bespreek verwachtingen en zoek een passende plek.", x: 0, y: 0, tint: "danger", lowerIsBetter: true },
+  { key: "generieke_medewerker", label: "Generieke medewerker", description: "Goed geplaatst met een stabiele prestatie. Weinig behoefte aan verandering; waardeer de constante bijdrage.", x: 1, y: 0, tint: "none" },
+  { key: "specialist", label: "Specialist", description: "Topprestatie in de huidige rol, vooral waardevol als expert. Niet per se gericht op doorgroei.", x: 2, y: 0, tint: "none" },
 ];
 
 export const CATEGORY_BY_KEY = Object.fromEntries(CATEGORIES.map((c) => [c.key, c])) as Record<CategoryKey, Category>;

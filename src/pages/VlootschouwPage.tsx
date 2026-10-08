@@ -39,10 +39,7 @@ export function VlootschouwPage({ role }: Props) {
   const [showBenchmark, setShowBenchmark] = useState(true);
   const [open, setOpen] = useState<SheetTarget | null>(null);
   const [sheetMembers, setSheetMembers] = useState<Employee[]>([]);
-  const [filtersOpen, setFiltersOpen] = useState(
-    PARAMS.get("filters") !== "0" &&
-      window.matchMedia("(min-width: 1024px)").matches,
-  );
+  const [filtersOpen, setFiltersOpen] = useState(PARAMS.get("filters") === "1");
   const isDesktop = useIsDesktop();
 
   const rows = useMemo(() => {
@@ -73,8 +70,8 @@ export function VlootschouwPage({ role }: Props) {
       title: `${c === "low" ? "Plaatsing heroverwegen" : c.label} · ${members.length} ${members.length === 1 ? "medewerker" : "medewerkers"}`,
       subtitle:
         c === "low"
-          ? "Potentieel 1. Deze medewerkers vallen buiten het 3×3 grid."
-          : "Laatste afgeronde beoordeling per medewerker.",
+          ? "Potentieel 1: plaatsing heroverwegen. De leidinggevende ziet in de huidige rol weinig toekomst; bespreek een andere plek of afscheid."
+          : c.description,
     });
   };
 

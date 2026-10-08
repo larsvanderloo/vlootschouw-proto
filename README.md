@@ -11,7 +11,7 @@ npx heroui-pro@latest install   # eenmalig, haalt @heroui-pro/react + peers op
 npm run dev
 ```
 
-Deep links voor demo en screenshots: `?role=manager`, `?view=table`, `?open=ster` (of een andere vaknaam / `low`).
+Deep links voor demo en screenshots: `?role=manager`, `?view=table`, `?open=ster` (of een andere vaknaam / `low`), `?filters=1` (filterkaart open).
 
 ## Wat er in zit
 
