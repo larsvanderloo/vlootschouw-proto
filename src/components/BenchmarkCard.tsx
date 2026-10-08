@@ -1,3 +1,4 @@
+import { ChartLine } from "@gravity-ui/icons";
 import { BarChart } from "@heroui-pro/react/bar-chart";
 import {
   BENCHMARK,
@@ -85,6 +86,10 @@ export function BenchmarkCard({
   const body = (
     <div className="flex flex-col gap-4">
       <div>
+        <ChartLine
+          className={`mb-3 size-9 ${bare ? "text-accent" : "text-accent-foreground"}`}
+          aria-hidden="true"
+        />
         <h2
           className={`text-xl font-semibold ${bare ? "text-foreground" : "text-accent-foreground"}`}
         >
