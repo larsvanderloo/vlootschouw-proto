@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Avatar, Button, Chip, Label, SearchField } from "@heroui/react";
 import { ListView, Sheet } from "@heroui-pro/react";
 import { fmtDate, fmtScore, initials, type Employee } from "../data/vlootschouw";
+import { useIsDesktop } from "../hooks/useMediaQuery";
 
 export interface SheetTarget { title: string; subtitle: string }
 
@@ -14,6 +15,7 @@ interface Props {
 /** Rechter sheet met de medewerkers van één vak. */
 export function MemberSheet({ target, members, onClose }: Props) {
   const [query, setQuery] = useState("");
+  const isDesktop = useIsDesktop();
   const title = target?.title ?? "";
   const list = useMemo(
     () => members.filter((m) => m.name.toLowerCase().includes(query.toLowerCase())),
@@ -21,10 +23,11 @@ export function MemberSheet({ target, members, onClose }: Props) {
   );
 
   return (
-    <Sheet isOpen={target !== null} placement="right" onOpenChange={(open) => { if (!open) { onClose(); setQuery(""); } }}>
+    <Sheet isOpen={target !== null} placement={isDesktop ? "right" : "bottom"} onOpenChange={(open) => { if (!open) { onClose(); setQuery(""); } }}>
       <Sheet.Backdrop>
-        <Sheet.Content className="w-[440px] max-w-[92vw]">
+        <Sheet.Content className={isDesktop ? "w-[440px]" : "max-h-[88vh]"}>
           <Sheet.Dialog>
+            {!isDesktop && <Sheet.Handle />}
             <Sheet.CloseTrigger aria-label="Sluiten" />
             <Sheet.Header>
               <Sheet.Heading>{title}</Sheet.Heading>

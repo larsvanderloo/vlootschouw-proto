@@ -30,3 +30,13 @@ Deep links voor demo en screenshots: `?role=manager`, `?view=table`, `?open=ster
 - Benchmark = percentage per vak over alle Welder-klanten (`buckets_performance_potential`), maandelijks ververst.
 
 Bron: FigJam-briefing en het Figma-design "Vlootschouw 9-grid (HeroUI Pro)".
+
+## Screenshots met device-emulatie
+
+```bash
+npx vite build --base ./ --outDir dist-shot
+python3 -m http.server 4173 --directory dist-shot &
+node scripts/shot.mjs "http://127.0.0.1:4173/index.html?role=admin&bm=1" out.png 390 844 1
+```
+
+Extra deep link: `?bm=1` opent de benchmark-sheet (alleen onder 1024px).

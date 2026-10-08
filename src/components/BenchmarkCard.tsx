@@ -7,6 +7,7 @@ interface Props {
   showBenchmark: boolean;
   onToggle: (v: boolean) => void;
   title?: string;
+  className?: string;
 }
 
 const GROUPS = [
@@ -15,7 +16,7 @@ const GROUPS = [
   { label: "Onderpresteerders", keys: ["onderpresteerder"] as const },
 ];
 
-export function BenchmarkCard({ shares, showBenchmark, onToggle, title = BENCHMARK_META.title }: Props) {
+export function BenchmarkCard({ shares, showBenchmark, onToggle, title = BENCHMARK_META.title, className = "" }: Props) {
   const all = shares.total + shares.lowPotential.length;
   const rows = GROUPS.map((g) => ({
     label: g.label,
@@ -29,7 +30,7 @@ export function BenchmarkCard({ shares, showBenchmark, onToggle, title = BENCHMA
   });
 
   return (
-    <aside className="bg-accent text-accent-foreground flex w-full flex-col gap-4 rounded-2xl p-6 lg:w-[360px] lg:shrink-0">
+    <aside className={`bg-accent text-accent-foreground flex w-full flex-col gap-4 rounded-2xl p-6 ${className}`}>
       <div>
         <h2 className="text-lg font-semibold">{title}</h2>
         <p className="mt-1 text-sm opacity-90">{BENCHMARK_META.description}</p>

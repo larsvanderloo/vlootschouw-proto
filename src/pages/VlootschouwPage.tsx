@@ -1,4 +1,7 @@
 import { useMemo, useState } from "react";
+import { Button } from "@heroui/react";
+import { Sheet } from "@heroui-pro/react";
+import { useIsDesktop } from "../hooks/useMediaQuery";
 import { PageHeader, type View } from "../components/PageHeader";
 import { Filters, DEFAULT_FILTERS, type FilterState } from "../components/Filters";
 import { VlootschouwGrid } from "../components/VlootschouwGrid";
@@ -18,6 +21,8 @@ export function VlootschouwPage({ role }: Props) {
   const [showBenchmark, setShowBenchmark] = useState(true);
   const [open, setOpen] = useState<SheetTarget | null>(null);
   const [sheetMembers, setSheetMembers] = useState<Employee[]>([]);
+  const [bmOpen, setBmOpen] = useState(PARAMS.get("bm") === "1");
+  const isDesktop = useIsDesktop();
 
   const rows = useMemo(() => {
     let list = role === "manager" ? EMPLOYEES.filter((e) => e.managerId === TEAM_MANAGER_ID) : EMPLOYEES;
@@ -63,7 +68,7 @@ export function VlootschouwPage({ role }: Props) {
     : `Prestatie en potentieel van ${rows.length} medewerkers, op basis van de laatste afgeronde beoordeling`;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className={`flex flex-col gap-6 ${!isDesktop && view === "grid" ? "pb-20" : ""}`}>
       <PageHeader
         title="Vlootschouw"
         subtitle={subtitle}
@@ -78,12 +83,15 @@ export function VlootschouwPage({ role }: Props) {
           <div className="min-w-0 flex-1">
             <VlootschouwGrid shares={shares} showBenchmark={showBenchmark} onOpen={openCategory} />
           </div>
-          <BenchmarkCard
-            shares={shares}
-            showBenchmark={showBenchmark}
-            onToggle={setShowBenchmark}
-            title={isManager ? "Hoe goed doet mijn team het?" : undefined}
-          />
+          {isDesktop && (
+            <BenchmarkCard
+              className="lg:w-[360px] lg:shrink-0"
+              shares={shares}
+              showBenchmark={showBenchmark}
+              onToggle={setShowBenchmark}
+              title={isManager ? "Hoe goed doet mijn team het?" : undefined}
+            />
+          )}
         </div>
       ) : (
         <VlootschouwTable
@@ -99,6 +107,33 @@ export function VlootschouwPage({ role }: Props) {
       )}
 
       <MemberSheet target={open} members={sheetMembers} onClose={() => setOpen(null)} />
+
+      {!isDesktop && view === "grid" && (
+        <>
+          <div className="bg-background/90 border-border fixed inset-x-0 bottom-0 z-20 border-t p-4 backdrop-blur">
+            <Button fullWidth variant="primary" onPress={() => setBmOpen(true)}>
+              Benchmark bekijken
+            </Button>
+          </div>
+          <Sheet isOpen={bmOpen} placement="bottom" onOpenChange={setBmOpen}>
+            <Sheet.Backdrop>
+              <Sheet.Content className="max-h-[90vh]">
+                <Sheet.Dialog className="p-0">
+                  <Sheet.Handle />
+                  <Sheet.Body className="p-2">
+                    <BenchmarkCard
+                      shares={shares}
+                      showBenchmark={showBenchmark}
+                      onToggle={setShowBenchmark}
+                      title={isManager ? "Hoe goed doet mijn team het?" : undefined}
+                    />
+                  </Sheet.Body>
+                </Sheet.Dialog>
+              </Sheet.Content>
+            </Sheet.Backdrop>
+          </Sheet>
+        </>
+      )}
     </div>
   );
 }
