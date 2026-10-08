@@ -187,7 +187,7 @@ export function Filters({
 
   if (bare) return body;
   return (
-    <aside className="bg-surface shadow-surface h-fit rounded-2xl p-6 lg:sticky lg:top-6">
+    <aside className="bg-surface shadow-surface rounded-2xl p-6">
       {body}
     </aside>
   );

@@ -1,6 +1,4 @@
 import { Persons } from "@gravity-ui/icons";
-import { Tooltip } from "@heroui/react";
-import { DeltaChip } from "./DeltaChip";
 import { MemberAvatars } from "./MemberAvatars";
 import { fmtPct, type Category, type Employee } from "../data/vlootschouw";
 
@@ -8,91 +6,94 @@ interface Props {
   category: Category;
   members: Employee[];
   pct: number;
-  benchmark: number;
-  showBenchmark: boolean;
-  compact?: boolean;
-  /** Mobiele 3x3: kleine tegel zonder avatars, alleen naam, %, delta en aantal. */
+  /** Mobiele 3x3: kleine tegel zonder avatars. */
   dense?: boolean;
   onOpen: (category: Category) => void;
 }
 
-const DOT: Record<Category["tint"], string> = {
-  none: "bg-default",
-  success: "bg-success",
-  danger: "bg-danger",
+/** Tegelkleur per vak: success/danger gevuld met witte tekst, overige neutraal. */
+const SURFACE: Record<
+  Category["tint"],
+  { tile: string; title: string; count: string; pct: string }
+> = {
+  none: {
+    tile: "bg-surface shadow-surface",
+    title: "text-foreground",
+    count: "text-muted",
+    pct: "text-foreground",
+  },
+  success: {
+    tile: "bg-success-soft border border-success/40",
+    title: "text-success-soft-foreground",
+    count: "text-success-soft-foreground/70",
+    pct: "text-success-soft-foreground",
+  },
+  danger: {
+    tile: "bg-danger-soft border border-danger/40",
+    title: "text-danger-soft-foreground",
+    count: "text-danger-soft-foreground/70",
+    pct: "text-danger-soft-foreground",
+  },
 };
 
-function TileTitle({ category, count, dense }: { category: Category; count: number; dense?: boolean }) {
-  if (dense) {
-    return (
-      <span className="flex flex-col gap-0.5 text-xs leading-4">
-        <span className="flex items-start gap-1.5">
-          <span className={`mt-1 size-2 shrink-0 rounded-full ${DOT[category.tint]}`} aria-hidden="true" />
-          <span className="text-foreground line-clamp-2 font-medium break-words hyphens-auto" lang="nl">{category.label}</span>
-        </span>
-        <span className="text-muted flex items-center gap-1 pl-3.5 tabular-nums" aria-label={`${count} medewerkers`}>
-          <Persons className="size-3" /> {count}
-        </span>
-      </span>
-    );
-  }
-  return (
-    <span className="flex items-center gap-2 text-base leading-6">
-      <span className={`size-2 shrink-0 rounded-full ${DOT[category.tint]}`} aria-hidden="true" />
-      <span className="text-foreground font-medium">{category.label}</span>
-      <span className="text-muted tabular-nums">{count}</span>
-    </span>
-  );
-}
-
-export function GridTile({ category, members, pct, benchmark, showBenchmark, compact, dense, onOpen }: Props) {
+export function GridTile({ category, members, pct, dense, onOpen }: Props) {
   const empty = members.length === 0;
+  const c = SURFACE[category.tint];
+  const label = `${category.label}: ${members.length} medewerkers, open lijst`;
+
   if (dense) {
     return (
       <button
         type="button"
         onClick={() => onOpen(category)}
-        aria-label={`${category.label}: ${members.length} medewerkers, open lijst`}
+        aria-label={label}
         className={[
-          "bg-surface shadow-surface flex min-h-[7.5rem] w-full flex-col items-start gap-2 rounded-2xl p-3 text-left",
+          "flex min-h-[7rem] w-full flex-col items-start gap-2 rounded-2xl p-3 text-left",
           "focus-visible:ring-accent focus-visible:outline-none focus-visible:ring-2",
+          c.tile,
           empty ? "opacity-60" : "",
         ].join(" ")}
       >
-        <TileTitle category={category} count={members.length} dense />
-        <span className={`text-xl font-semibold leading-6 tabular-nums ${empty ? "text-muted" : "text-foreground"}`}>{fmtPct(pct)}</span>
-        {showBenchmark && <DeltaChip own={pct} benchmark={benchmark} lowerIsBetter={category.lowerIsBetter} />}
+        <span
+          className={`line-clamp-2 text-xs font-medium leading-4 break-words hyphens-auto ${c.title}`}
+          lang="nl"
+        >
+          {category.label}
+        </span>
+        <span
+          className={`flex items-center gap-1 text-xs tabular-nums ${c.count}`}
+          aria-hidden="true"
+        >
+          <Persons className="size-3" /> {members.length}
+        </span>
+        <span
+          className={`mt-auto text-xl font-semibold leading-6 tabular-nums ${c.pct}`}
+        >
+          {fmtPct(pct)}
+        </span>
       </button>
     );
   }
+
   return (
     <button
       type="button"
       onClick={() => onOpen(category)}
-      aria-label={`${category.label}: ${members.length} medewerkers, open lijst`}
+      aria-label={label}
       className={[
-        "bg-surface shadow-surface flex w-full flex-col items-start gap-4 rounded-2xl p-5 text-left",
+        "flex w-full flex-col items-start gap-4 rounded-2xl p-5 text-left transition-colors",
         "hover:ring-2 hover:ring-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
+        c.tile,
         empty ? "opacity-60" : "",
-        compact ? "p-3 gap-2" : "",
       ].join(" ")}
     >
-      <TileTitle category={category} count={members.length} />
-      <div className="flex w-full items-center justify-between gap-2">
-        <span className={`text-foreground font-semibold tabular-nums ${empty ? "text-muted" : ""} ${compact ? "text-xl" : "text-2xl"}`}>{fmtPct(pct)}</span>
-        {showBenchmark && (
-          <Tooltip delay={200}>
-            <Tooltip.Trigger>
-              <span className="inline-flex">
-                <DeltaChip own={pct} benchmark={benchmark} lowerIsBetter={category.lowerIsBetter} />
-              </span>
-            </Tooltip.Trigger>
-            <Tooltip.Content showArrow>
-              Ten opzichte van de benchmark ({fmtPct(benchmark, 1)})
-            </Tooltip.Content>
-          </Tooltip>
-        )}
-      </div>
+      <span className="flex items-center gap-2 text-base leading-6">
+        <span className={`font-medium ${c.title}`}>{category.label}</span>
+        <span className={`tabular-nums ${c.count}`}>{members.length}</span>
+      </span>
+      <span className={`text-2xl font-semibold tabular-nums ${c.pct}`}>
+        {fmtPct(pct)}
+      </span>
       <MemberAvatars members={members} size="sm" compact />
     </button>
   );

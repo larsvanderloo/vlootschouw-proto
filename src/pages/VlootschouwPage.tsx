@@ -94,6 +94,8 @@ export function VlootschouwPage({ role }: Props) {
   }
 
   const isManager = role === "manager";
+  const hasSidebar =
+    !isManager && isDesktop && (filtersOpen || view === "grid");
   const subtitle = isManager
     ? `Mijn team · ${rows.length} directe medewerkers, op basis van de laatste afgeronde beoordeling`
     : `Prestatie en potentieel van ${rows.length} medewerkers, op basis van de laatste afgeronde beoordeling`;
@@ -119,7 +121,7 @@ export function VlootschouwPage({ role }: Props) {
 
       <div
         className={
-          !isManager && isDesktop
+          hasSidebar
             ? "grid grid-cols-[minmax(0,1fr)_300px] items-start gap-8"
             : ""
         }
@@ -143,10 +145,12 @@ export function VlootschouwPage({ role }: Props) {
           ) : (
             <VlootschouwTable rows={rows} onRowAction={openEmployee} />
           )}
-          {!isManager && !isDesktop && view === "grid" && <BenchmarkCard shares={shares} />}
+          {!isManager && !isDesktop && view === "grid" && (
+            <BenchmarkCard shares={shares} />
+          )}
         </div>
-        {!isManager && isDesktop && (
-          <div className="sticky top-6 flex flex-col gap-4">
+        {hasSidebar && (
+          <div className="sticky top-6 -m-2 flex max-h-[calc(100dvh-2rem)] flex-col gap-4 overflow-y-auto p-2">
             {filtersOpen && (
               <Filters
                 value={filters}
