@@ -59,13 +59,13 @@ export function VlootschouwTable({ rows, onRowAction, pageSize = 15 }: Props) {
         </div>
       ),
     },
-    { id: "department", header: "Afdeling", accessorKey: "department", allowsSorting: true, headerClassName: "max-md:hidden", cellClassName: "max-md:hidden" },
-    { id: "cycle", header: "Cyclus", accessorKey: "cycle", allowsSorting: true, headerClassName: "max-md:hidden", cellClassName: "max-md:hidden" },
-    { id: "date", header: "Datum", accessorKey: "date", allowsSorting: true, cell: (r) => fmtDate(r.date), headerClassName: "max-md:hidden", cellClassName: "max-md:hidden" },
-    { id: "performance", header: <><span className="md:hidden">Prest.</span><span className="max-md:hidden">Prestatie</span></>, accessorKey: "performance", allowsSorting: true, align: "end", cell: (r) => fmtScore(r.performance) },
-    { id: "potential", header: <><span className="md:hidden">Pot.</span><span className="max-md:hidden">Potentieel</span></>, accessorKey: "potential", allowsSorting: true, align: "end" },
+    { id: "department", header: "Afdeling", accessorKey: "department", allowsSorting: true, width: 150, headerClassName: "max-md:hidden", cellClassName: "max-md:hidden" },
+    { id: "cycle", header: "Cyclus", accessorKey: "cycle", allowsSorting: true, width: 200, headerClassName: "max-md:hidden", cellClassName: "max-md:hidden" },
+    { id: "date", header: "Datum", accessorKey: "date", allowsSorting: true, width: 140, cell: (r) => fmtDate(r.date), headerClassName: "max-md:hidden", cellClassName: "max-md:hidden" },
+    { id: "performance", header: <><span className="md:hidden">Prest.</span><span className="max-md:hidden">Prestatie</span></>, accessorKey: "performance", allowsSorting: true, align: "end", width: 110, cell: (r) => fmtScore(r.performance) },
+    { id: "potential", header: <><span className="md:hidden">Pot.</span><span className="max-md:hidden">Potentieel</span></>, accessorKey: "potential", allowsSorting: true, align: "end", width: 110 },
     {
-      id: "categoryLabel", header: "Vak", accessorKey: "categoryLabel", allowsSorting: true, headerClassName: "max-md:hidden", cellClassName: "max-md:hidden",
+      id: "categoryLabel", header: "Vak", accessorKey: "categoryLabel", allowsSorting: true, width: 220, headerClassName: "max-md:hidden", cellClassName: "max-md:hidden",
       cell: (r) => <Chip size="sm" variant="soft" color={CHIP_COLOR[r.tint]} className="whitespace-nowrap">{r.categoryLabel}</Chip>,
     },
   ];
@@ -76,6 +76,8 @@ export function VlootschouwTable({ rows, onRowAction, pageSize = 15 }: Props) {
   return (
     <DataGrid
       aria-label="Vlootschouw tabel"
+      contentClassName="table-fixed"
+      className="[&_td]:h-16 [&_td]:whitespace-nowrap [&_th]:whitespace-nowrap"
       columns={columns}
       data={slice}
       getRowId={(r) => r.id}
