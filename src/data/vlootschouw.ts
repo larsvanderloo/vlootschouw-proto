@@ -22,7 +22,19 @@ export const CATEGORIES: Category[] = [
 
 export const CATEGORY_BY_KEY = Object.fromEntries(CATEGORIES.map((c) => [c.key, c])) as Record<CategoryKey, Category>;
 export const X_LABELS = ["Prestatie laag", "Prestatie middel", "Prestatie hoog"];
-export const Y_LABELS = ["Potentieel 4", "Potentieel 3", "Potentieel 2"]; // top to bottom
+/** Officiële Welder-teksten POTENTIAL_LABEL_1..4 */
+export const POTENTIAL_LABELS: Record<1 | 2 | 3 | 4, string> = {
+  1: "Plaatsing heroverwegen",
+  2: "Goed geplaatst",
+  3: "Potentieel",
+  4: "Top-potentieel",
+};
+/** Rijen van boven naar beneden: potentieel 4, 3, 2 */
+export const Y_ROWS: { level: 2 | 3 | 4; label: string }[] = [
+  { level: 4, label: POTENTIAL_LABELS[4] },
+  { level: 3, label: POTENTIAL_LABELS[3] },
+  { level: 2, label: POTENTIAL_LABELS[2] },
+];
 
 /** Welder benchmark, % per vak (potentieel 1 valt buiten de benchmark) */
 export const BENCHMARK: Record<CategoryKey, number> = {

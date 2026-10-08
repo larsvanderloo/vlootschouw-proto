@@ -1,6 +1,6 @@
 import { Avatar, AvatarGroup, Chip } from "@heroui/react";
 import { HoverCard } from "@heroui-pro/react";
-import { fmtDate, fmtScore, initials, type Employee } from "../data/vlootschouw";
+import { POTENTIAL_LABELS, fmtDate, fmtScore, initials, type Employee } from "../data/vlootschouw";
 
 interface Props {
   members: Employee[];
@@ -38,7 +38,7 @@ export function MemberAvatars({ members, max = 6, size = "md" }: Props) {
             <p className="text-muted mt-3 text-xs">Beoordeeld {fmtDate(m.date)} · {m.cycle}</p>
             <div className="mt-2 flex gap-2">
               <Chip size="sm" variant="soft">Prestatie {fmtScore(m.performance)}</Chip>
-              <Chip size="sm" variant="soft" color="accent">Potentieel {m.potential}</Chip>
+              <Chip size="sm" variant="soft" color="accent">{POTENTIAL_LABELS[m.potential]}</Chip>
             </div>
           </HoverCard.Content>
         </HoverCard>

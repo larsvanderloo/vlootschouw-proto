@@ -2,7 +2,7 @@ import { TrendChip } from "@heroui-pro/react";
 import { GridTile } from "./GridTile";
 import { MemberAvatars } from "./MemberAvatars";
 import {
-  BENCHMARK, BENCHMARK_LOW_POTENTIAL, CATEGORIES, X_LABELS, Y_LABELS,
+  BENCHMARK, BENCHMARK_LOW_POTENTIAL, CATEGORIES, X_LABELS, Y_ROWS,
   fmtDelta, fmtPct, trendOf, type Category, type Shares,
 } from "../data/vlootschouw";
 
@@ -29,7 +29,9 @@ export function VlootschouwGrid({ shares, showBenchmark, compact, onOpen }: Prop
         </div>
         {rows.map((y, i) => (
           <div key={y} className="flex flex-col gap-1.5">
-            <div className="text-muted text-xs font-medium">{Y_LABELS[i]}</div>
+            <div className="text-muted text-xs font-medium">
+              {Y_ROWS[i].label} <span className="opacity-60">· potentieel {Y_ROWS[i].level}</span>
+            </div>
             <div className="grid grid-cols-3 gap-2">
               {[0, 1, 2].map((x) => {
                 const cat = CATEGORIES.find((c) => c.x === x && c.y === y)!;
@@ -55,7 +57,10 @@ export function VlootschouwGrid({ shares, showBenchmark, compact, onOpen }: Prop
       <div className="grid grid-cols-[6rem_repeat(3,minmax(0,1fr))] gap-x-4 gap-y-4 max-md:hidden">
         {rows.map((y, i) => (
           <div key={y} className="contents">
-            <div className="text-muted flex items-center text-sm font-medium">{Y_LABELS[i]}</div>
+            <div className="text-muted flex flex-col justify-center text-sm font-medium leading-tight">
+              <span>{Y_ROWS[i].label}</span>
+              <span className="text-xs font-normal opacity-70">potentieel {Y_ROWS[i].level}</span>
+            </div>
             {[0, 1, 2].map((x) => {
               const cat = CATEGORIES.find((c) => c.x === x && c.y === y)!;
               return (
@@ -89,7 +94,7 @@ export function VlootschouwGrid({ shares, showBenchmark, compact, onOpen }: Prop
         <div className="flex min-w-0 flex-1 flex-col">
           <span className="text-foreground text-sm font-medium">Plaatsing heroverwegen</span>
           <span className="text-muted text-xs">
-            Potentieel 1, valt buiten het grid · {shares.lowPotential.length}{" "}
+            Potentieel 1, buiten het grid · {shares.lowPotential.length}{" "}
             {shares.lowPotential.length === 1 ? "medewerker" : "medewerkers"}
           </span>
         </div>

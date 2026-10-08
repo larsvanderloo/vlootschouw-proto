@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Avatar, Button, Chip, Label, SearchField } from "@heroui/react";
 import { ListView, Sheet } from "@heroui-pro/react";
-import { fmtDate, fmtScore, initials, type Employee } from "../data/vlootschouw";
+import { POTENTIAL_LABELS, fmtDate, fmtScore, initials, type Employee } from "../data/vlootschouw";
 import { useIsDesktop } from "../hooks/useMediaQuery";
 
 export interface SheetTarget { title: string; subtitle: string }
@@ -64,7 +64,7 @@ export function MemberSheet({ target, members, onClose }: Props) {
                     </ListView.ItemContent>
                     <ListView.ItemAction>
                       <Chip size="sm" variant="soft">{fmtScore(m.performance)}</Chip>
-                      <Chip size="sm" variant="soft" color="accent">P{m.potential}</Chip>
+                      <Chip size="sm" variant="soft" color="accent" className="whitespace-nowrap">{POTENTIAL_LABELS[m.potential]}</Chip>
                     </ListView.ItemAction>
                   </ListView.Item>
                 )}
