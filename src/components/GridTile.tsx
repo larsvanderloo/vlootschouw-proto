@@ -1,8 +1,8 @@
 import { Persons } from "@gravity-ui/icons";
 import { Tooltip } from "@heroui/react";
-import { TrendChip } from "@heroui-pro/react";
+import { DeltaChip } from "./DeltaChip";
 import { MemberAvatars } from "./MemberAvatars";
-import { fmtDelta, fmtPct, trendOf, type Category, type Employee } from "../data/vlootschouw";
+import { fmtPct, type Category, type Employee } from "../data/vlootschouw";
 
 interface Props {
   category: Category;
@@ -54,16 +54,14 @@ export function GridTile({ category, members, pct, benchmark, showBenchmark, com
         onClick={() => onOpen(category)}
         aria-label={`${category.label}: ${members.length} medewerkers, open lijst`}
         className={[
-          "bg-surface border-border flex min-h-[7.5rem] w-full flex-col items-start gap-2 rounded-xl border p-2.5 text-left",
+          "bg-surface shadow-surface flex min-h-[7.5rem] w-full flex-col items-start gap-2 rounded-2xl p-3 text-left",
           "focus-visible:ring-accent focus-visible:outline-none focus-visible:ring-2",
           empty ? "opacity-60" : "",
         ].join(" ")}
       >
         <TileTitle category={category} count={members.length} dense />
         <span className={`text-xl font-semibold leading-6 tabular-nums ${empty ? "text-muted" : "text-foreground"}`}>{fmtPct(pct)}</span>
-        {showBenchmark && (
-          <TrendChip size="sm" trend={trendOf(pct, benchmark)}>{fmtDelta(pct, benchmark)}</TrendChip>
-        )}
+        {showBenchmark && <DeltaChip own={pct} benchmark={benchmark} lowerIsBetter={category.lowerIsBetter} />}
       </button>
     );
   }
@@ -73,22 +71,20 @@ export function GridTile({ category, members, pct, benchmark, showBenchmark, com
       onClick={() => onOpen(category)}
       aria-label={`${category.label}: ${members.length} medewerkers, open lijst`}
       className={[
-        "bg-surface border-border flex w-full flex-col items-start gap-4 rounded-xl border p-5 text-left transition-colors",
+        "bg-surface shadow-surface flex w-full flex-col items-start gap-4 rounded-2xl p-5 text-left",
         "hover:ring-2 hover:ring-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
         empty ? "opacity-60" : "",
         compact ? "p-3 gap-2" : "",
       ].join(" ")}
     >
       <TileTitle category={category} count={members.length} />
-      <div className="flex items-center gap-2">
+      <div className="flex w-full items-center justify-between gap-2">
         <span className={`text-foreground font-semibold tabular-nums ${empty ? "text-muted" : ""} ${compact ? "text-xl" : "text-2xl"}`}>{fmtPct(pct)}</span>
         {showBenchmark && (
           <Tooltip delay={200}>
             <Tooltip.Trigger>
               <span className="inline-flex">
-                <TrendChip size="sm" trend={trendOf(pct, benchmark)}>
-                  {fmtDelta(pct, benchmark)}
-                </TrendChip>
+                <DeltaChip own={pct} benchmark={benchmark} lowerIsBetter={category.lowerIsBetter} />
               </span>
             </Tooltip.Trigger>
             <Tooltip.Content showArrow>

@@ -9,23 +9,47 @@ interface Props {
   view: View;
   onViewChange: (v: View) => void;
   onExport?: () => void;
+  /** Zijbalk-toggle; undefined verbergt de knop. */
+  sidebar?: { open: boolean; count: number; onToggle: () => void };
 }
 
-export function PageHeader({ title, subtitle, view, onViewChange, onExport }: Props) {
+export function PageHeader({
+  title,
+  subtitle,
+  view,
+  onViewChange,
+  onExport,
+  sidebar,
+}: Props) {
   return (
     <header className="flex flex-wrap items-center justify-between gap-4">
       <div>
-        <h1 className="text-foreground text-3xl font-semibold tracking-tight">{title}</h1>
+        <h1 className="text-foreground text-3xl font-semibold tracking-tight">
+          {title}
+        </h1>
         <p className="text-muted mt-1 text-base">{subtitle}</p>
       </div>
       <div className="flex items-center gap-3">
-        <Segment selectedKey={view} onSelectionChange={(k) => onViewChange(k as View)} aria-label="Weergave">
+        <Segment
+          selectedKey={view}
+          onSelectionChange={(k) => onViewChange(k as View)}
+          aria-label="Weergave"
+        >
           <Segment.Item id="grid">Grid</Segment.Item>
           <Segment.Item id="table">Tabel</Segment.Item>
         </Segment>
+        {sidebar && (
+          <Button
+            variant={sidebar.open ? "primary" : "secondary"}
+            onPress={sidebar.onToggle}
+            aria-pressed={sidebar.open}
+          >
+            Filters{sidebar.count ? ` (${sidebar.count})` : ""}
+          </Button>
+        )}
         {onExport && (
           <Button variant="secondary" onPress={onExport}>
-            Exporteren (xlsx)
+            Exporteren
           </Button>
         )}
       </div>

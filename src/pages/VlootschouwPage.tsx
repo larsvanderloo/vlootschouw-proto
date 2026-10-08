@@ -3,34 +3,60 @@ import { Button } from "@heroui/react";
 import { Sheet } from "@heroui-pro/react";
 import { useIsDesktop } from "../hooks/useMediaQuery";
 import { PageHeader, type View } from "../components/PageHeader";
-import { Filters, DEFAULT_FILTERS, type FilterState } from "../components/Filters";
+import {
+  Filters,
+  DEFAULT_FILTERS,
+  activeFilterCount,
+  type FilterState,
+} from "../components/Filters";
 import { VlootschouwGrid } from "../components/VlootschouwGrid";
 import { BenchmarkCard } from "../components/BenchmarkCard";
 import { MemberSheet, type SheetTarget } from "../components/MemberSheet";
 import { VlootschouwTable } from "../components/VlootschouwTable";
-import { CATEGORY_BY_KEY, EMPLOYEES, TEAM_MANAGER_ID, computeShares, type Category, type CategoryKey, type Employee } from "../data/vlootschouw";
+import {
+  BENCHMARK_META,
+  CATEGORY_BY_KEY,
+  EMPLOYEES,
+  TEAM_MANAGER_ID,
+  computeShares,
+  type Category,
+  type CategoryKey,
+  type Employee,
+} from "../data/vlootschouw";
 
 const PARAMS = new URLSearchParams(location.search);
 
-interface Props { role: "admin" | "manager" }
+interface Props {
+  role: "admin" | "manager";
+}
 
 /** Eén pagina voor beide rollen: HR ziet alles met filters, de leidinggevende alleen het eigen team. */
 export function VlootschouwPage({ role }: Props) {
-  const [view, setView] = useState<View>(PARAMS.get("view") === "table" ? "table" : "grid");
+  const [view, setView] = useState<View>(
+    PARAMS.get("view") === "table" ? "table" : "grid",
+  );
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
   const [showBenchmark, setShowBenchmark] = useState(true);
   const [open, setOpen] = useState<SheetTarget | null>(null);
   const [sheetMembers, setSheetMembers] = useState<Employee[]>([]);
-  const [bmOpen, setBmOpen] = useState(PARAMS.get("bm") === "1");
+  const [filtersOpen, setFiltersOpen] = useState(
+    PARAMS.get("filters") !== "0" &&
+      window.matchMedia("(min-width: 1024px)").matches,
+  );
   const isDesktop = useIsDesktop();
 
   const rows = useMemo(() => {
-    let list = role === "manager" ? EMPLOYEES.filter((e) => e.managerId === TEAM_MANAGER_ID) : EMPLOYEES;
+    let list =
+      role === "manager"
+        ? EMPLOYEES.filter((e) => e.managerId === TEAM_MANAGER_ID)
+        : EMPLOYEES;
     if (role === "admin") {
-      if (filters.department) list = list.filter((e) => e.department === filters.department);
+      if (filters.departments.length)
+        list = list.filter((e) => filters.departments.includes(e.department));
       if (filters.cycle) list = list.filter((e) => e.cycle === filters.cycle);
       if (filters.range) {
-        const s = filters.range.start.toString(), en = filters.range.end.toString();
+        const s = filters.range.start.toString(),
+          en = filters.range.end.toString();
         list = list.filter((e) => e.date >= s && e.date <= en);
       }
     }
@@ -40,11 +66,15 @@ export function VlootschouwPage({ role }: Props) {
   const shares = useMemo(() => computeShares(rows), [rows]);
 
   const openCategory = (c: Category | "low") => {
-    const members = c === "low" ? shares.lowPotential : shares.byCategory[c.key];
+    const members =
+      c === "low" ? shares.lowPotential : shares.byCategory[c.key];
     setSheetMembers(members);
     setOpen({
       title: `${c === "low" ? "Plaatsing heroverwegen" : c.label} · ${members.length} ${members.length === 1 ? "medewerker" : "medewerkers"}`,
-      subtitle: c === "low" ? "Potentieel 1. Deze medewerkers vallen buiten het 3×3 grid." : "Laatste afgeronde beoordeling per medewerker.",
+      subtitle:
+        c === "low"
+          ? "Potentieel 1. Deze medewerkers vallen buiten het 3×3 grid."
+          : "Laatste afgeronde beoordeling per medewerker.",
     });
   };
 
@@ -59,7 +89,8 @@ export function VlootschouwPage({ role }: Props) {
     setBooted(true);
     const k = PARAMS.get("open");
     if (k === "low") openCategory("low");
-    else if (k && k in CATEGORY_BY_KEY) openCategory(CATEGORY_BY_KEY[k as CategoryKey]);
+    else if (k && k in CATEGORY_BY_KEY)
+      openCategory(CATEGORY_BY_KEY[k as CategoryKey]);
   }
 
   const isManager = role === "manager";
@@ -68,72 +99,109 @@ export function VlootschouwPage({ role }: Props) {
     : `Prestatie en potentieel van ${rows.length} medewerkers, op basis van de laatste afgeronde beoordeling`;
 
   return (
-    <div className={`flex flex-col gap-6 ${!isDesktop && view === "grid" ? "pb-20" : ""}`}>
+    <div className="flex flex-col gap-6">
       <PageHeader
         title="Vlootschouw"
         subtitle={subtitle}
         view={view}
         onViewChange={setView}
         onExport={() => alert("Export naar xlsx (demo)")}
+        sidebar={
+          isManager
+            ? undefined
+            : {
+                open: filtersOpen,
+                count: activeFilterCount(filters),
+                onToggle: () => setFiltersOpen((o) => !o),
+              }
+        }
       />
-      {!isManager && <Filters value={filters} onChange={setFilters} />}
 
-      {view === "grid" ? (
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
-          <div className="min-w-0 flex-1">
-            <VlootschouwGrid shares={shares} showBenchmark={showBenchmark} onOpen={openCategory} />
-          </div>
-          {isDesktop && (
-            <BenchmarkCard
-              className="lg:w-[360px] lg:shrink-0"
-              shares={shares}
-              showBenchmark={showBenchmark}
-              onToggle={setShowBenchmark}
-              title={isManager ? "Hoe goed doet mijn team het?" : undefined}
-            />
+      <div
+        className={
+          !isManager && isDesktop
+            ? "grid grid-cols-[minmax(0,1fr)_300px] items-start gap-8"
+            : ""
+        }
+      >
+        <div className="flex flex-col gap-6">
+          {view === "grid" ? (
+            <section className="flex flex-col gap-4">
+              <VlootschouwGrid
+                shares={shares}
+                showBenchmark={showBenchmark}
+                onOpen={openCategory}
+              />
+              {showBenchmark && (
+                <p className="text-muted text-xs">
+                  Verschil ten opzichte van de Welder-benchmark (
+                  {BENCHMARK_META.description.toLowerCase()}), bijgewerkt{" "}
+                  {BENCHMARK_META.updated}. Groen is gunstig, rood ongunstig.
+                </p>
+              )}
+            </section>
+          ) : (
+            <VlootschouwTable rows={rows} onRowAction={openEmployee} />
           )}
+          {!isManager && !isDesktop && <BenchmarkCard shares={shares} />}
         </div>
-      ) : (
-        <VlootschouwTable
-          rows={rows}
-          onRowAction={openEmployee}
-        />
+        {!isManager && isDesktop && (
+          <div className="sticky top-6 flex flex-col gap-4">
+            {filtersOpen && (
+              <Filters
+                value={filters}
+                onChange={setFilters}
+                showBenchmark={showBenchmark}
+                onToggleBenchmark={setShowBenchmark}
+              />
+            )}
+            <BenchmarkCard shares={shares} />
+          </div>
+        )}
+      </div>
+
+      {!isManager && !isDesktop && (
+        <Sheet
+          isOpen={filtersOpen}
+          placement="bottom"
+          onOpenChange={setFiltersOpen}
+        >
+          <Sheet.Backdrop>
+            <Sheet.Content className="max-h-[90vh]">
+              <Sheet.Dialog>
+                <Sheet.Handle />
+                <Sheet.Body className="p-6">
+                  <Filters
+                    bare
+                    value={filters}
+                    onChange={setFilters}
+                    showBenchmark={showBenchmark}
+                    onToggleBenchmark={setShowBenchmark}
+                  />
+                </Sheet.Body>
+                <Sheet.Footer>
+                  <Sheet.Close>
+                    <Button>Toepassen</Button>
+                  </Sheet.Close>
+                </Sheet.Footer>
+              </Sheet.Dialog>
+            </Sheet.Content>
+          </Sheet.Backdrop>
+        </Sheet>
       )}
 
       {isManager && (
         <p className="text-muted text-xs">
-          Alleen je eigen directe medewerkers. Benchmarkpercentages komen van Welder en worden maandelijks ververst.
+          Alleen je eigen directe medewerkers. Benchmarkpercentages komen van
+          Welder en worden maandelijks ververst.
         </p>
       )}
 
-      <MemberSheet target={open} members={sheetMembers} onClose={() => setOpen(null)} />
-
-      {!isDesktop && view === "grid" && (
-        <>
-          <div className="bg-background/90 border-border fixed inset-x-0 bottom-0 z-20 border-t p-4 backdrop-blur">
-            <Button fullWidth variant="primary" onPress={() => setBmOpen(true)}>
-              Benchmark bekijken
-            </Button>
-          </div>
-          <Sheet isOpen={bmOpen} placement="bottom" onOpenChange={setBmOpen}>
-            <Sheet.Backdrop>
-              <Sheet.Content className="max-h-[90vh]">
-                <Sheet.Dialog className="p-0">
-                  <Sheet.Handle />
-                  <Sheet.Body className="p-2">
-                    <BenchmarkCard
-                      shares={shares}
-                      showBenchmark={showBenchmark}
-                      onToggle={setShowBenchmark}
-                      title={isManager ? "Hoe goed doet mijn team het?" : undefined}
-                    />
-                  </Sheet.Body>
-                </Sheet.Dialog>
-              </Sheet.Content>
-            </Sheet.Backdrop>
-          </Sheet>
-        </>
-      )}
+      <MemberSheet
+        target={open}
+        members={sheetMembers}
+        onClose={() => setOpen(null)}
+      />
     </div>
   );
 }

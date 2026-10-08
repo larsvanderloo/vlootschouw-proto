@@ -1,10 +1,10 @@
 import { Tooltip } from "@heroui/react";
-import { TrendChip } from "@heroui-pro/react";
+import { DeltaChip } from "./DeltaChip";
 import { GridTile } from "./GridTile";
 import { MemberAvatars } from "./MemberAvatars";
 import {
   BENCHMARK, BENCHMARK_LOW_POTENTIAL, CATEGORIES, X_LABELS, Y_ROWS,
-  fmtDelta, fmtPct, trendOf, type Category, type Shares,
+  fmtPct, type Category, type Shares,
 } from "../data/vlootschouw";
 
 interface Props {
@@ -85,7 +85,7 @@ export function VlootschouwGrid({ shares, showBenchmark, compact, onOpen }: Prop
       <button
         type="button"
         onClick={() => onOpen("low")}
-        className="bg-surface-secondary border-border hover:ring-accent/40 focus-visible:ring-accent flex w-full items-center gap-4 rounded-xl border px-4 py-3 text-left transition-colors hover:ring-2 focus-visible:outline-none focus-visible:ring-2"
+        className="bg-surface-secondary hover:ring-accent/40 focus-visible:ring-accent flex w-full items-center gap-4 rounded-2xl px-5 py-4 text-left hover:ring-2 focus-visible:outline-none focus-visible:ring-2"
       >
         <div className="flex min-w-0 flex-1 flex-col">
           <span className="text-foreground text-sm font-medium">Plaatsing heroverwegen</span>
@@ -98,9 +98,7 @@ export function VlootschouwGrid({ shares, showBenchmark, compact, onOpen }: Prop
           <Tooltip delay={200}>
             <Tooltip.Trigger>
               <span className="inline-flex">
-                <TrendChip size="sm" trend={trendOf(lowPct, BENCHMARK_LOW_POTENTIAL)}>
-                  {fmtDelta(lowPct, BENCHMARK_LOW_POTENTIAL)}
-                </TrendChip>
+                <DeltaChip own={lowPct} benchmark={BENCHMARK_LOW_POTENTIAL} lowerIsBetter />
               </span>
             </Tooltip.Trigger>
             <Tooltip.Content showArrow>Ten opzichte van de benchmark ({fmtPct(BENCHMARK_LOW_POTENTIAL, 1)})</Tooltip.Content>

@@ -5,7 +5,7 @@ export type CategoryKey =
 
 export type Tint = "none" | "success" | "danger";
 
-export interface Category { key: CategoryKey; label: string; x: 0 | 1 | 2; y: 0 | 1 | 2; tint: Tint }
+export interface Category { key: CategoryKey; label: string; x: 0 | 1 | 2; y: 0 | 1 | 2; tint: Tint; lowerIsBetter?: boolean }
 
 /** x = prestatieband (0 laag, 1 middel, 2 hoog), y = potentieel - 2 (0..2) */
 export const CATEGORIES: Category[] = [
@@ -15,7 +15,7 @@ export const CATEGORIES: Category[] = [
   { key: "instabiele_presteerder", label: "Instabiele presteerder", x: 0, y: 1, tint: "none" },
   { key: "professional", label: "Professional", x: 1, y: 1, tint: "none" },
   { key: "topper", label: "Topper", x: 2, y: 1, tint: "success" },
-  { key: "onderpresteerder", label: "Onderpresteerder", x: 0, y: 0, tint: "danger" },
+  { key: "onderpresteerder", label: "Onderpresteerder", x: 0, y: 0, tint: "danger", lowerIsBetter: true },
   { key: "generieke_medewerker", label: "Generieke medewerker", x: 1, y: 0, tint: "none" },
   { key: "specialist", label: "Specialist", x: 2, y: 0, tint: "none" },
 ];
