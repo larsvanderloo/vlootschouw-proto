@@ -143,7 +143,7 @@ export function VlootschouwPage({ role }: Props) {
           ) : (
             <VlootschouwTable rows={rows} onRowAction={openEmployee} />
           )}
-          {!isManager && !isDesktop && <BenchmarkCard shares={shares} />}
+          {!isManager && !isDesktop && view === "grid" && <BenchmarkCard shares={shares} />}
         </div>
         {!isManager && isDesktop && (
           <div className="sticky top-6 flex flex-col gap-4">
@@ -155,7 +155,7 @@ export function VlootschouwPage({ role }: Props) {
                 onToggleBenchmark={setShowBenchmark}
               />
             )}
-            <BenchmarkCard shares={shares} />
+            {view === "grid" && <BenchmarkCard shares={shares} />}
           </div>
         )}
       </div>

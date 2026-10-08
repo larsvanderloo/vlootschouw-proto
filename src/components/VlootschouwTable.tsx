@@ -60,13 +60,12 @@ export function VlootschouwTable({ rows, onRowAction, pageSize = 15 }: Props) {
         </div>
       ),
     },
-    { id: "department", header: "Afdeling", accessorKey: "department", allowsSorting: true, width: 150, headerClassName: "max-md:hidden", cellClassName: "max-md:hidden" },
-    { id: "cycle", header: "Cyclus", accessorKey: "cycle", allowsSorting: true, width: 200, headerClassName: "max-md:hidden", cellClassName: "max-md:hidden" },
-    { id: "date", header: "Datum", accessorKey: "date", allowsSorting: true, width: 140, cell: (r) => fmtDate(r.date), headerClassName: "max-md:hidden", cellClassName: "max-md:hidden" },
-    { id: "performance", header: <><span className="md:hidden">Prest.</span><span className="max-md:hidden">Prestatie</span></>, accessorKey: "performance", allowsSorting: true, align: "end", width: 110, cell: (r) => fmtScore(r.performance) },
-    { id: "potential", header: "Potentieel", accessorKey: "potential", allowsSorting: true, width: 170, sortFn: (a, b) => a.potential - b.potential, cell: (r) => <span className="whitespace-nowrap">{POTENTIAL_LABELS[r.potential]}</span>, headerClassName: "max-md:hidden", cellClassName: "max-md:hidden" },
+    { id: "department", header: "Afdeling", accessorKey: "department", allowsSorting: true, width: 120, headerClassName: "w-32 max-md:hidden", cellClassName: "max-md:hidden" },
+    { id: "date", header: "Datum", accessorKey: "date", allowsSorting: true, width: 120, cell: (r) => fmtDate(r.date), headerClassName: "w-32 max-md:hidden", cellClassName: "max-md:hidden" },
+    { id: "performance", header: <><span className="md:hidden">Prest.</span><span className="max-md:hidden">Prestatie</span></>, accessorKey: "performance", allowsSorting: true, align: "end", width: 72, headerClassName: "w-24", cell: (r) => fmtScore(r.performance) },
+    { id: "potential", header: "Potentieel", accessorKey: "potential", allowsSorting: true, width: 176, headerClassName: "w-44 max-md:hidden", sortFn: (a, b) => a.potential - b.potential, cell: (r) => <span className="whitespace-nowrap">{POTENTIAL_LABELS[r.potential]}</span>, cellClassName: "max-md:hidden" },
     {
-      id: "categoryLabel", header: "Vak", accessorKey: "categoryLabel", allowsSorting: true, width: 220, headerClassName: "max-md:hidden", cellClassName: "max-md:hidden",
+      id: "categoryLabel", header: "Vak", accessorKey: "categoryLabel", allowsSorting: true, width: 300, headerClassName: "w-60 max-md:hidden", cellClassName: "max-md:hidden",
       cell: (r) => <Chip size="sm" variant="soft" color={CHIP_COLOR[r.tint]} className="whitespace-nowrap">{r.categoryLabel}</Chip>,
     },
   ];
