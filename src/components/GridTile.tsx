@@ -88,7 +88,6 @@ export function GridTile({ category, members, pct, benchmark, showBenchmark, com
               <span className="inline-flex">
                 <TrendChip size="sm" trend={trendOf(pct, benchmark)}>
                   {fmtDelta(pct, benchmark)}
-                  <TrendChip.Suffix className="text-current! opacity-75">bm {fmtPct(benchmark, 1)}</TrendChip.Suffix>
                 </TrendChip>
               </span>
             </Tooltip.Trigger>

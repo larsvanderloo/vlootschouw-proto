@@ -1,3 +1,4 @@
+import { Tooltip } from "@heroui/react";
 import { TrendChip } from "@heroui-pro/react";
 import { GridTile } from "./GridTile";
 import { MemberAvatars } from "./MemberAvatars";
@@ -94,10 +95,16 @@ export function VlootschouwGrid({ shares, showBenchmark, compact, onOpen }: Prop
           </span>
         </div>
         {showBenchmark && (
-          <TrendChip size="sm" trend={trendOf(lowPct, BENCHMARK_LOW_POTENTIAL)}>
-            {fmtDelta(lowPct, BENCHMARK_LOW_POTENTIAL)}
-            <TrendChip.Suffix className="text-current! opacity-75 max-md:hidden">bm {fmtPct(BENCHMARK_LOW_POTENTIAL, 1)}</TrendChip.Suffix>
-          </TrendChip>
+          <Tooltip delay={200}>
+            <Tooltip.Trigger>
+              <span className="inline-flex">
+                <TrendChip size="sm" trend={trendOf(lowPct, BENCHMARK_LOW_POTENTIAL)}>
+                  {fmtDelta(lowPct, BENCHMARK_LOW_POTENTIAL)}
+                </TrendChip>
+              </span>
+            </Tooltip.Trigger>
+            <Tooltip.Content showArrow>Ten opzichte van de benchmark ({fmtPct(BENCHMARK_LOW_POTENTIAL, 1)})</Tooltip.Content>
+          </Tooltip>
         )}
         <span className="max-md:hidden"><MemberAvatars members={shares.lowPotential} size="sm" /></span>
       </button>
